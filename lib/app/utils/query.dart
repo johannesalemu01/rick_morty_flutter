@@ -1,8 +1,8 @@
 import 'package:graphql_flutter/graphql_flutter.dart';
 
-getAllCharachters() => gql(r"""
-  query GetCharachters ($page:Int){
-    characters (page:$page) {
+final getAllCharacters = gql(r"""
+  query GetCharacters($page: Int) {
+    characters(page: $page) {
       info {
         next
       }
@@ -14,6 +14,9 @@ getAllCharachters() => gql(r"""
         image
         type
         name
+        location {
+          name
+        }
       }
     }
   }

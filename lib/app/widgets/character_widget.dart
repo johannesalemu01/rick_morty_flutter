@@ -1,141 +1,109 @@
 import 'package:flutter/material.dart';
 import 'package:rick_and_morty/app/model/character.dart';
+import 'package:rick_and_morty/app/ui/detail_screen.dart';
 
 class CharacterWidget extends StatelessWidget {
-  const CharacterWidget({super.key, required this.character});
-
   final Character character;
+  const CharacterWidget({Key? key, required this.character}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: MediaQuery.of(context).size.width * .43,
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(4),
-          border: Border.all(color: Colors.lightGreen)),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(
-            alignment: Alignment.centerLeft,
-            width: double.maxFinite,
-            decoration: BoxDecoration(borderRadius: BorderRadius.circular(6)),
-            child: Image.network(
-              character.image,
-              width: MediaQuery.of(context).size.width * .43,
-              fit: BoxFit.fitWidth,
+    Color statusColor =
+        character.status.toLowerCase() == 'alive' ? Colors.green : Colors.red;
+
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => DetailScreen(id: character.id),
+          ),
+        );
+      },
+      child: Container(
+        width: 180,
+        padding: const EdgeInsets.all(8),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          gradient: const LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              Colors.black,
+              Colors.white,
+              Colors.transparent,
+              Colors.black,
+            ],
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.1),
+              spreadRadius: 2,
+              blurRadius: 4,
+              offset: const Offset(0, 2),
             ),
-          ),
-          const SizedBox(
-            height: 8,
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(6),
+              child: Image.network(
+                character.image,
+                width: double.infinity,
+                height: 120,
+                fit: BoxFit.cover,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              character.name,
+              style: const TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 16,
+              ),
+            ),
+            Row(
               children: [
-                Row(
-                  children: [
-                    Flexible(
-                        flex: 1,
-                        child: Text(
-                          character.name,
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodyLarge
-                              ?.copyWith(fontWeight: FontWeight.w500),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        )),
-                    const SizedBox(
-                      width: 4,
-                    ),
-                    Tooltip(
-                      message: character.status,
-                      child: Icon(
-                        Icons.circle,
-                        size: 12,
-                        color: character.status.toLowerCase() == "alive"
-                            ? Colors.green
-                            : character.status.toLowerCase() == "unknown"
-                                ? Colors.grey
-                                : Colors.red,
-                      ),
-                    )
-                  ],
-                ),
-                const SizedBox(
-                  height: 8,
-                ),
-                SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      IconAndLabel(
-                          label: character.species,
-                          icon: Icons.psychology_outlined),
-                      IconAndLabel(
-                          label: character.gender,
-                          icon: Icons.transgender_outlined),
-                    ],
+                Container(
+                  width: 10,
+                  height: 10,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: statusColor,
                   ),
+                  margin: const EdgeInsets.only(right: 5),
                 ),
-                const SizedBox(
-                  height: 8,
-                ),
-                if (character.type.isNotEmpty)
-                  IconAndLabel(
-                    label: character.type,
-                    icon: Icons.coronavirus_outlined,
-                    flexible: true,
-                  ),
-                const SizedBox(
-                  height: 12,
-                )
+                Text(character.status),
               ],
             ),
-          )
-        ],
+            Row(
+              children: [
+                Icon(Icons.location_on,
+                    size: 16, color: Color.fromARGB(120, 11, 21, 203)),
+                const SizedBox(width: 4),
+                Expanded(
+                  child: Text(
+                    character.location,
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
+                  ),
+                ),
+              ],
+            ),
+            Row(
+              children: [
+                Icon(Icons.pets,
+                    size: 16, color: Color.fromARGB(195, 74, 103, 166)),
+                const SizedBox(width: 4),
+                Text(character.species),
+              ],
+            ),
+          ],
+        ),
       ),
     );
-  }
-}
-
-class IconAndLabel extends StatelessWidget {
-  const IconAndLabel(
-      {super.key,
-      required this.label,
-      required this.icon,
-      this.flexible = false});
-  final String label;
-  final IconData icon;
-  final bool flexible;
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      Icon(
-        icon,
-        size: 16,
-      ),
-      const SizedBox(
-        width: 6,
-      ),
-      flexible
-          ? Flexible(
-              flex: 1,
-              child: Text(
-                label,
-                maxLines: 3,
-                overflow: TextOverflow.ellipsis,
-              ),
-            )
-          : Text(
-              label,
-              // maxLines: 2,overflow: TextOverflow.ellipsis,
-            ),
-    ]);
   }
 }
