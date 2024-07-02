@@ -107,10 +107,10 @@ class DetailScreen extends ConsumerWidget {
                     ),
                     const Divider(
                       height: 40,
-                      thickness: 0.4,
+                      thickness: 1.5,
                       indent: 10,
                       endIndent: 10,
-                      color: Color.fromARGB(117, 6, 67, 43),
+                      color: Color.fromARGB(117, 193, 228, 214),
                     ),
                     const SizedBox(height: 16),
                     Text(
@@ -162,7 +162,7 @@ class DetailScreen extends ConsumerWidget {
                     ),
                     const Divider(
                       height: 40,
-                      thickness: 0.4,
+                      thickness: 1.2,
                       indent: 10,
                       endIndent: 10,
                       color: Color.fromARGB(117, 6, 67, 43),
@@ -233,7 +233,12 @@ class DetailScreen extends ConsumerWidget {
                 IconButton(
                   icon:
                       const Icon(Icons.arrow_forward_ios, color: Colors.white),
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                      builder: (_) =>
+                          EpisodeDetailScreen(episodeId: episode['id']),
+                    ));
+                  },
                 ),
               ],
             ),
